@@ -49,6 +49,13 @@
 #define 	SER_RX					PORTCbits.RC7			// serial receive
 #define		SER_RX_DIR				TRISCbits.TRISC7
 
+// I2C Communication
+#define 	I2C_SCL					PORTCbits.RC4
+#define 	I2C_SCL_DIR 			TRISCbits.RC4
+#define 	I2C_SDA					PORTCbits.RC5
+#define 	I2C_SDA_DIR 			TRISCbits.RC5
+
+
 // Display Data port
 #define		DISPLAY_PORT				PORTD	//LATD	 				// 7seg display data (DB0-DB7)
 #define 	DISPLAY_PORT_DIRECTION		TRISD

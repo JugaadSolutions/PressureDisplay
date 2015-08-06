@@ -48,13 +48,16 @@ typedef struct _DigitDisplay
 {
 	DISPLAY_MODE mode;
 	UINT8 buffer[2][MAX_DIGITS];	//buffer containing data to be displayed
-	UINT8 noDigits;			//no of digits used in the application
-	UINT8 digitIndex;	// index of the current digit to be displayed
-	UINT16 blinkCount;	//counter to be used in blink mode
-	UINT16 blinkPeriod;	//blink period represented in counts
-	UINT8* dispBuffer; // pointer to current display buffer
-	UINT16 blinkIndex; //counter used to blink perticular digit
-	UINT8 dotIndex;	   //To hold the dot index value 
+	UINT8 noDigits;					//no of digits used in the application
+	UINT8 digitIndex;				// index of the current digit to be displayed
+	UINT16 blinkCount;				//counter to be used in blink mode
+	UINT16 blinkPeriod;				//blink period represented in counts
+	UINT8* dispBuffer; 				// pointer to current display buffer
+	UINT16 blinkIndex; 				//counter used to blink perticular digit
+	UINT8 dotIndex;	   				//To hold the dot index value 
+
+	BOOL dotBlinkOn; 				// Flag used to notify the task about dot blinking
+
 
 }DigitDisplay;
 
@@ -151,6 +154,8 @@ BOOL DigitDisplay_init( UINT8 noDigits )
 
 void DigitDisplay_task(void)
 {
+	UINT8 i;
+
 	switch(digitDisplay.mode)
 	{
 		case STATIC :
@@ -176,11 +181,21 @@ void DigitDisplay_task(void)
 			{
 				digitDisplay.blinkCount = 0;
 				if( digitDisplay.dispBuffer == digitDisplay.buffer[STATIC] )
+				{
+					if( digitDisplay.dotBlinkOn == TRUE )
+					{
+						for( i = 0 ; i < digitDisplay.noDigits ; i++ )
+							digitDisplay.buffer[BLINK][i] |= digitDisplay.buffer[STATIC][i];
+					}
+					
 					digitDisplay.dispBuffer = digitDisplay.buffer[BLINK];
+				}
 				else
 					digitDisplay.dispBuffer = digitDisplay.buffer[STATIC];
 			}
 		break;
+
+
 
 		default:
 		break;
@@ -314,7 +329,7 @@ BOOL DigitDisplay_updateDigit(UINT8 index , UINT8 value)
 *------------------------------------------------------------------------------
 */
 
-void DigitDisplay_blinkOn(UINT16 blinkPeriod)
+void DigitDisplay_blinkOn( UINT16 blinkPeriod )
 {
 	digitDisplay.blinkPeriod = blinkPeriod /DISPLAY_REFRESH_PERIOD;	//convert period in milliseconds to period in count
 	digitDisplay.blinkCount = 0;									//reset counter
@@ -339,7 +354,7 @@ void DigitDisplay_blinkOn(UINT16 blinkPeriod)
 *------------------------------------------------------------------------------
 */
 
-void DigitDisplay_blinkOff()
+void DigitDisplay_blinkOff( void )
 {
 	digitDisplay.dispBuffer = digitDisplay.buffer[STATIC]; //set current display buffer to data buffer
 	digitDisplay.mode = STATIC;							   //set static mode
@@ -363,7 +378,7 @@ void DigitDisplay_blinkOff()
 */
 
 
-void DigitDisplay_clear()
+void DigitDisplay_clear( void )
 {
 	UINT8 i;
 	for( i = 0 ; i < digitDisplay.noDigits ; i++)
@@ -413,10 +428,12 @@ static void writeToDisplayPort( UINT8 value )
 			DIGIT_SEL_A = 1;
 			
 		break;
+
 		case 1:
    			DIGIT_SEL_B = 1;
 
 		break;
+
 		case 2:
    			DIGIT_SEL_C = 1;
 
@@ -521,8 +538,48 @@ void DigitDisplay_dotOff( void )
 	digitDisplay.dotIndex = DOT_OFF;
 }
 
+/*
+*------------------------------------------------------------------------------
+* void DigitDisplay_dotBlinkOn( UINT8 from, UINT8 to, UINT8 duation )
+*
+* Function to blink dot in the display
+*  
+* Input : 
+*
+* output: none
+*
+* return value: none
+* 
+*------------------------------------------------------------------------------
+*/
 
+void DigitDisplay_dotBlinkOn( UINT8 from, UINT8 length, UINT16 blinkPeriod )
+{
+	UINT8 i = from;
 
+	for( ; i < from+length; i++ )
+		digitDisplay.buffer[BLINK][i] |= 0X80;		
+
+	digitDisplay.blinkPeriod = blinkPeriod / DISPLAY_REFRESH_PERIOD;	//convert period in milliseconds to period in count
+	digitDisplay.blinkCount = 0;										//reset counter	
+	digitDisplay.dotBlinkOn = TRUE;
+	digitDisplay.mode = BLINK;		
+}
+
+/*
+*------------------------------------------------------------------------------
+* BOOL DigitDisplay_updateBuffer_noValidation(UINT8 *buffer)
+*
+* Function to switch on dot in the display
+*  
+* Input : 
+*
+* output: none
+*
+* return value: none
+* 
+*------------------------------------------------------------------------------
+*/
 BOOL DigitDisplay_updateBuffer_noValidation(UINT8 *buffer)
 {
 	UINT8 i = 0;

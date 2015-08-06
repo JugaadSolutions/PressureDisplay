@@ -1,12 +1,43 @@
-#ifndef TIMER_DRIVER_H
-#define TIMER_DRIVER_H
+
+#ifndef I2C_DRIVER_H
+#define I2C_DRIVER_H
+
 
 /*
 *------------------------------------------------------------------------------
-* timer_driver.h
+* i2c_driver.h
 *
-* Include file for timer_driver module.
+* Include file for i2c_driver module.
+*
+* (C)2008 Sam's Logic.
+*
+* The copyright notice above does not evidence any
+* actual or intended publication of such source code.
+*
+*------------------------------------------------------------------------------
 */
+
+/*
+*------------------------------------------------------------------------------
+* File				: i2c_driver.h
+* Created by		: Sam
+* Last changed by	: Sam
+* Last changed		: 11/12/2010
+*------------------------------------------------------------------------------
+*
+* Revision 1.3 11/12/2010  Sam
+* Demo Release
+* Revision 1.2 01/12/2010 Sam
+* Added extern void InitializeI2C(void) 
+* Revision 1.1 07/07/2010 Sam
+* First Release
+* Revision 1.0 03/10/2008 Sam
+* Initial revision
+*
+*------------------------------------------------------------------------------
+*/
+
+
 /*
 *------------------------------------------------------------------------------
 * Include Files
@@ -14,6 +45,7 @@
 */
 
 #include "board.h"
+#include "typedefs.h"
 
 /*
 *------------------------------------------------------------------------------
@@ -26,18 +58,9 @@
 * Public Macros
 *------------------------------------------------------------------------------
 */
-#define TMR0_RELOAD	
-#define TMR0_FUNC	SCH_update
-// For 2ms display interrupt
-// 2ms = (4/20000000Hz) * 10000
-//#define DISP_ISR_PERIOD	(65535 - 10000)
 
-// 2ms = (4/40000000Hz) * 20000
-//#define DISP_ISR_PERIOD	(65535 - 7500)
-#define TMR1_RELOAD		(65535 - 7500)
-#define TMR1_FUNC		
-
-
+#define 	ACK			(1)
+#define 	NO_ACK		(0)
 
 /*
 *------------------------------------------------------------------------------
@@ -63,14 +86,19 @@
 *------------------------------------------------------------------------------
 */
 
-extern void TMR0_init(unsigned int reload , void (*func)());
-extern void TMR1_init(unsigned int reload , void (*func)());
-void TMR1_ISR(void);
-void TMR0_ISR(void);
-UINT32 GetAppTime(void);
-void ResetAppTime(void);
+extern void InitializeI2C(void);
+extern void ResetI2C(void);
+extern void StartI2C(void);
+extern void StopI2C(void);
+extern INT8 WriteI2C(UINT8 Data);
+extern UINT8 ReadI2C(BOOL ackBit);
+extern void WriteByteI2C(UINT8 devAddr, UINT8 addr,UINT8 data);
+extern UINT8 ReadByteI2C(UINT8 devAddr, UINT8 addr);
 
 #endif
 /*
-*  End of timer_driver.h
+*  End of i2c_driver.h
 */
+
+
+

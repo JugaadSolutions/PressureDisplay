@@ -10,11 +10,12 @@
 
 
 
-
+//TIMER Configuration
+#define TIMESTAMP_DURATION 		(200)
 
 
 //#define __FACTORY_CONFIGURATION__
-//#define __SIMULATION__
+#define __SIMULATION__
 
 //#define __DIGIT_DISPLAY_TEST__
 
@@ -22,6 +23,7 @@
 #define DISPLAY_REFRESH_PERIOD	2	//period of refresh in milliseconds
 #define DOT_ON 2
 #define DOT_OFF 0XFF
+#define SWITCHING_TIME		 20//150 		// 200ms * 150 = 30sec
 
 
 /*

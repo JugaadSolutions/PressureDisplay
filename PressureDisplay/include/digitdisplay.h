@@ -244,6 +244,23 @@ void DigitDisplay_dotOff( void );
 
 BOOL DigitDisplay_updateBuffer_noValidation(UINT8 *buffer);
 
+/*
+*------------------------------------------------------------------------------
+* void DigitDisplay_dotBlinkOn( UINT8 from, UINT8 to, UINT8 duation )
+*
+* Function to blink dot in the display
+*  
+* Input : 
+*
+* output: none
+*
+* return value: none
+* 
+*------------------------------------------------------------------------------
+*/
+
+void DigitDisplay_dotBlinkOn( UINT8 from, UINT8 length, UINT16 blinkPeriod );
+
 
 
 

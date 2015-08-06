@@ -25,6 +25,8 @@
 #include "app.h"
 #include "adc_ide.h"
 #include "mb.h"
+#include "rtc_driver.h"
+#include "i2c_driver.h"
 /*
 *------------------------------------------------------------------------------
 * Private Defines
@@ -141,7 +143,7 @@ UINT8 message[]="IDEONICS";
 *
 *------------------------------------------------------------------------------
 */
-const UINT8 LED_MAP[11] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x00};
+
 #define DIGIT_REFRESH_PERIOD	(65535 - 5000)
 #define TICK_PERIOD	(65535 - 10000)
 
@@ -160,7 +162,7 @@ void main(void)
 
 	BRD_init();			//board initialization
 
-	
+	InitializeRtc();	//RTC Initialization
 
 	DigitDisplay_init(4);
 
@@ -169,7 +171,7 @@ void main(void)
 
 	ADC_init();
 	
-	app_init();
+	APP_init();
 
 	
 
@@ -191,7 +193,7 @@ void main(void)
 		if( count >= 12 )
 		{
 			ADC_task();
-			app_task();
+			APP_task();
 			count = 0;
 		}
 

@@ -1,10 +1,13 @@
+#ifndef MATH_FUN_H
+#define MATH_FUN_H
 
 /*
 *------------------------------------------------------------------------------
-* device.c
+* math_fun.h
 *
-* Board specipic drivers module(BSP)
+* Include file for math_fun functons
 *
+* (C)2009 Sam's Logic.
 *
 * The copyright notice above does not evidence any
 * actual or intended publication of such source code.
@@ -12,6 +15,23 @@
 *------------------------------------------------------------------------------
 */
 
+/*
+*------------------------------------------------------------------------------
+* File				: math_fun.h
+* Created by		: Sam
+* Last changed by	: Sam
+* Last changed		: 11/12/2010
+*------------------------------------------------------------------------------
+*
+* Revision 1.2 11/12/2010  Sam
+* Demo Release
+* Revision 1.1 07/07/2010 Sam
+* First Release
+* Revision 1.0 20/04/2010 Sam
+* Initial revision
+*
+*------------------------------------------------------------------------------
+*/
 
 /*
 *------------------------------------------------------------------------------
@@ -19,128 +39,69 @@
 *------------------------------------------------------------------------------
 */
 
-
-#include "board.h"
-#include "config.h"
 #include "typedefs.h"
 
 
 
-
 /*
 *------------------------------------------------------------------------------
-* Private Defines
+* Hardware Port Allocation
 *------------------------------------------------------------------------------
 */
 
 /*
 *------------------------------------------------------------------------------
-* Private Macros
+* Public Defines
 *------------------------------------------------------------------------------
 */
 
 /*
 *------------------------------------------------------------------------------
-* Private Data Types
+* Public Macros
+*------------------------------------------------------------------------------
+*/
+
+#define	LD_WORD(ptr)		(((UINT16)*(UINT8*)(ptr+1)<<8)|*(ptr))
+#define	LD_DWORD(ptr)		(((UINT32)*(UINT8*)(ptr+3)<<24)|((UINT32)*(UINT8*)(ptr+2)<<16)|((UINT16)*(UINT8*)(ptr+1)<<8)|*(UINT8*)(ptr))
+#define	ST_WORD(ptr,val)	*(UINT8*)(ptr)=val; *(UINT8*)(ptr+1)=val>>8
+#define	ST_DWORD(ptr,val)	*(UINT8*)(ptr)=val; *(UINT8*)(ptr+1)=val>>8; *(UINT8*)(ptr+2)=val>>16; *(UINT8*)(ptr+3)=val>>24
+
+/*
+*------------------------------------------------------------------------------
+* Public Data Types
 *------------------------------------------------------------------------------
 */
 
 /*
 *------------------------------------------------------------------------------
-* Public Variables
+* Public Variables (extern)
+*------------------------------------------------------------------------------
+*/
+
+
+/*
+*------------------------------------------------------------------------------
+* Public Constants (extern)
 *------------------------------------------------------------------------------
 */
 
 /*
 *------------------------------------------------------------------------------
-* Private Variables (static)
+* Public Function Prototypes (extern)
 *------------------------------------------------------------------------------
 */
 
-static BOOL ledState;
+extern UINT8 ConvertBCD2HEX(UINT16 bcd);
+extern UINT16 BCD2HEX(UINT8 val);
+extern UINT8 HEX2BCD(UINT8 hexIn);
+extern void ConvertAndDisplay16BitValue(UINT16 inValue, UINT8 *pNewVal);
+extern UINT8 BCDtoBin(UINT8 val);
+extern UINT16 BinToBCD(UINT8 temp);
+extern void ConvertAndDisplay8BitValue(UINT8 inValue, UINT8 *pNewVal);
+extern UINT16 ConvertUnPackedAsciiToPacked16BitHexValue(UINT8 *inArray, UINT8 numOfDigits);
+extern void ConvertAndDisplay32BitValue(UINT32 inValue, UINT8 *pNewVal);
 
+#endif
 /*
-*------------------------------------------------------------------------------
-* Public Constants
-*------------------------------------------------------------------------------
-*/
-
-/*
-*------------------------------------------------------------------------------
-* Private Constants (static)
-*------------------------------------------------------------------------------
-*/
-
-/*
-*------------------------------------------------------------------------------
-* Private Function Prototypes (static)
-*------------------------------------------------------------------------------
-*/
-
-/*
-*------------------------------------------------------------------------------
-* Public Functions
-*------------------------------------------------------------------------------
-*/
-
-/*
-*------------------------------------------------------------------------------
-* void InitializeBoard(void)
-
-* Summary	: This function configures all i/o pin directions
-*
-* Input		: None
-*
-* Output	: None
-*
-*------------------------------------------------------------------------------
-*/
-void BRD_init(void)
-{
-	
-	ADCON1= 0x0E;
-	ANALOG_INPUT_DIRECTION = 1;	//Set direction for analog pin
-
-
-
-	TX_EN_DIR = PORT_OUT;		// Rs485 Direction Control
-	TX_EN = 0;					//initialized for RX 
-
-	
-	SER_TX_DIR  = PORT_OUT;		//USART Tx 
-	SER_RX_DIR	= PORT_IN;		//USART Rx
-
-	//I2C pins
-	I2C_SCL_DIR = PORT_OUT;
-	I2C_SDA_DIR = PORT_OUT;
-	
-	DISPLAY_PORT_DIRECTION = 0x00;	// Segment Data port
-
-
-	DIGIT_SEL_A_DIRECTION = PORT_OUT;		// Digit Selection
-	
-	DIGIT_SEL_B_DIRECTION = PORT_OUT;
-	
-	DIGIT_SEL_C_DIRECTION = PORT_OUT;
-	
-	DIGIT_SEL_D_DIRECTION = PORT_OUT;
-	
-
-	// Push Button	
-	KEYPAD_PORT_DIRECTION = PORT_IN;
-
-	HEART_BEAT_DIRECTION = PORT_OUT;
-
-}
-
-
-
-/*
-*------------------------------------------------------------------------------
-* Private Functions
-*------------------------------------------------------------------------------
-*/
-
-/*
-*  End of device.c
+*  End of math_fun.h
 */

@@ -51,13 +51,13 @@ typedef struct _LKP
 LKP lkp = {0};
 
 UINT8 lkpInput[][2] = {
-{1,50},
-{1,50},
 {1,100},
-{1,100},
-{1,100},
-{1,50},
-{1,50},
+{0,50},
+{0,100},
+{0,100},
+{0,100},
+{0,50},
+{0,50},
 {4,50},
 {4,50},
 {4,50},	
@@ -76,7 +76,10 @@ UINT8 portValue = 0x00;
 UINT8 portValue = 0xFF;
 #endif
 
+
+#pragma idata LINEAR_KEYPAD
 Key keys[MAX_KEYS] = {0};
+#pragma idata
 
 
 /*
